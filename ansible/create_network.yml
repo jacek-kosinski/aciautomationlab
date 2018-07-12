@@ -1,0 +1,36 @@
+---
+- name: Create Sample Tenant from Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars_files:
+    - 'passwords.yml'
+
+  tasks:
+    - name: Add a VRF to a tenant
+      aci_vrf:
+        host: '{{ aci_host }}'
+        username: '{{ aci_username }}'
+        password: '{{ aci_password }}'
+        validate_certs: no
+
+        tenant: ansible-tenant-1
+        vrf: ansible-vrf
+        description: Ansible VRF
+        policy_control_preference: enforced
+        policy_control_direction: ingress
+        state: present
+
+    - name: Add a Bridge Domain to a tenant
+      aci_bd:
+        host: '{{ aci_host }}'
+        username: '{{ aci_username }}'
+        password: '{{ aci_password }}'
+        validate_certs: no
+
+        tenant: ansible-tenant-1
+        vrf: ansible-vrf
+        bd: web_servers
+        description: Ansible BD
+        state: present
